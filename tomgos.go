@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"go/format"
 	"io/ioutil"
-	"log"
-	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -33,7 +31,7 @@ type GeneratedData struct {
 }
 
 type Generator interface {
-	Generate(tomlPathFile, targetFile string) error
+	Generate(tomlPathFile string) ([]byte, error)
 }
 
 type generator struct {
@@ -67,16 +65,16 @@ func snakeCaseToCamelCase(inputUnderScoreStr string) (camelCase string) {
 
 var re = regexp.MustCompile(`\{(.*?)\}`)
 
-func (g generator) Generate(tomlPathFile, targetFile string) error {
+func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 	tomlByteData, err := ioutil.ReadFile(tomlPathFile)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	rawStruct := map[string]interface{}{}
 
 	if _, err = toml.Decode(string(tomlByteData), &rawStruct); err != nil {
-		return err
+		return nil, err
 	}
 
 	generator := GeneratedData{
@@ -123,37 +121,21 @@ func (g generator) Generate(tomlPathFile, targetFile string) error {
 
 	tpl, err := template.ParseFiles(g.templateFilePath)
 	if err != nil {
-		return err
-	}
-
-	f, err := os.OpenFile(targetFile, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var buf bytes.Buffer
 
 	if err = tpl.Execute(&buf, generator); err != nil {
-		return err
+		return nil, err
 	}
 
 	formattedString, err := format.Source(buf.Bytes())
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = f.WriteString(string(formattedString))
-	defer func() {
-		if err := f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return formattedString, nil
 }
 
 func NewGenerator(packageName, templateFilePath string) Generator {
