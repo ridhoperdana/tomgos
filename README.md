@@ -48,4 +48,4 @@ Example:
 
 - [x] Support nested data structure
 - [ ] Support dynamic object
-- [ ] Support JSON descriptor
+- [x] Support JSON descriptor

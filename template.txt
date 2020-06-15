@@ -11,7 +11,7 @@ import (
 	type {{ .StructName }} struct {
 		{{ with .Fields }}
 			{{- range . }}
-				{{ .Name }} {{ .Type }}
+				{{ .Name }} {{ .Type }} `json:"{{ .JSONDescriptor }}"`
 			{{- end }}
 		{{ end }}
 	}

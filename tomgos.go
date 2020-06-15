@@ -16,8 +16,9 @@ import (
 )
 
 type StructFields struct {
-	Name string
-	Type string
+	Name           string
+	Type           string
+	JSONDescriptor string
 }
 
 type Struct struct {
@@ -109,8 +110,9 @@ func (g generator) Generate(tomlPathFile, targetFile string) error {
 				}
 			}
 			f := StructFields{
-				Name: snakeCaseToCamelCase(rawKey),
-				Type: typeName,
+				Name:           snakeCaseToCamelCase(rawKey),
+				Type:           typeName,
+				JSONDescriptor: rawKey,
 			}
 			fields = append(fields, f)
 		}
