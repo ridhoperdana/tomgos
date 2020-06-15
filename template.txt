@@ -1,0 +1,15 @@
+package {{ .PackageName }}
+
+import (
+	{{ if .UsingTime }}
+  		"time"
+	{{ end }}
+)
+
+type {{ .StructName }} struct {
+	{{ with .Fields }}
+		{{- range . }}
+			{{ .Name }} {{ .Type }}
+		{{- end }}
+	{{ end }}
+}

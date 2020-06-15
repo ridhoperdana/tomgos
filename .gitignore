@@ -4,4 +4,3 @@ vendor/
 # default file
 file.toml
 generated.go
-template.txt
