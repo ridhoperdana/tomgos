@@ -19,6 +19,26 @@ Example working TOML:
 	create_time = "1987-07-05T05:45:00Z"
 ``` 
 
+### Nested Struct
+To include nested object in the struct just use `{$struct_name}` on the
+toml value.
+
+Example:
+```toml
+[recipe]
+	id = "this-is-id"
+	title = "recipe title"
+	description = "short description"
+	cooking_time = 100
+	portion = 1
+	create_time = "1987-07-05T05:45:00Z"
+    video = "{video}"
+
+[video]
+	url = "http://url.com"
+``` 
+
+
 ## How to Use
 
 1. Build the binary. Run `make`
@@ -26,5 +46,6 @@ Example working TOML:
 
 ## TO-DO
 
-- Support nested data structure
-- Support dynammic object
+- [v] Support nested data structure
+- [] Support dynamic object
+- [] Support JSON descriptor

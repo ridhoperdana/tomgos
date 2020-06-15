@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -19,10 +20,14 @@ type StructFields struct {
 	Type string
 }
 
+type Struct struct {
+	StructName string
+	Fields     []StructFields
+}
+
 type GeneratedData struct {
 	PackageName string
-	StructName  string
-	Fields      []StructFields
+	Structs     []Struct
 	UsingTime   bool
 }
 
@@ -59,6 +64,8 @@ func snakeCaseToCamelCase(inputUnderScoreStr string) (camelCase string) {
 
 }
 
+var re = regexp.MustCompile(`\{(.*?)\}`)
+
 func (g generator) Generate(tomlPathFile, targetFile string) error {
 	tomlByteData, err := ioutil.ReadFile(tomlPathFile)
 	if err != nil {
@@ -75,8 +82,11 @@ func (g generator) Generate(tomlPathFile, targetFile string) error {
 		PackageName: g.packageName,
 	}
 
+	var structs []Struct
 	for key, raw := range rawStruct {
-		generator.StructName = key
+		structItem := Struct{
+			StructName: key,
+		}
 		rawAsMap, ok := raw.(map[string]interface{})
 		if !ok {
 			continue
@@ -86,10 +96,16 @@ func (g generator) Generate(tomlPathFile, targetFile string) error {
 			t := reflect.TypeOf(rawValue)
 			typeName := t.Name()
 			if typeName == "string" {
-				_, err := time.Parse(time.RFC3339, rawValue.(string))
+				fieldValueString := rawValue.(string)
+				_, err := time.Parse(time.RFC3339, fieldValueString)
 				if err == nil {
 					typeName = "time.Time"
 					generator.UsingTime = true
+				}
+
+				valuesFromRegex := re.FindStringSubmatch(fieldValueString)
+				if len(valuesFromRegex) > 1 {
+					typeName = valuesFromRegex[1]
 				}
 			}
 			f := StructFields{
@@ -98,8 +114,10 @@ func (g generator) Generate(tomlPathFile, targetFile string) error {
 			}
 			fields = append(fields, f)
 		}
-		generator.Fields = fields
+		structItem.Fields = fields
+		structs = append(structs, structItem)
 	}
+	generator.Structs = structs
 
 	tpl, err := template.ParseFiles(g.templateFilePath)
 	if err != nil {

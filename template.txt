@@ -6,10 +6,13 @@ import (
 	{{ end }}
 )
 
-type {{ .StructName }} struct {
-	{{ with .Fields }}
-		{{- range . }}
-			{{ .Name }} {{ .Type }}
-		{{- end }}
-	{{ end }}
-}
+
+{{ range .Structs }}
+	type {{ .StructName }} struct {
+		{{ with .Fields }}
+			{{- range . }}
+				{{ .Name }} {{ .Type }}
+			{{- end }}
+		{{ end }}
+	}
+{{ end }}
