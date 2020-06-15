@@ -11,12 +11,12 @@ it from JSON from this site: https://toolkit.site/format.html
 Example working TOML:
 ```toml
 [recipe]
-	id = "this-is-id"
-	title = "recipe title"
-	description = "short description"
-	cooking_time = 100
-	portion = 1
-	create_time = "1987-07-05T05:45:00Z"
+    id = "this-is-id"
+    title = "recipe title"
+    description = "short description"
+    cooking_time = 100
+    portion = 1
+    create_time = "1987-07-05T05:45:00Z"
 ``` 
 
 ### Nested Struct
@@ -47,5 +47,5 @@ Example:
 ## TO-DO
 
 - [x] Support nested data structure
-- [] Support dynamic object
-- [] Support JSON descriptor
+- [ ] Support dynamic object
+- [ ] Support JSON descriptor
