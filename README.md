@@ -26,16 +26,16 @@ toml value.
 Example:
 ```toml
 [recipe]
-	id = "this-is-id"
-	title = "recipe title"
-	description = "short description"
-	cooking_time = 100
-	portion = 1
-	create_time = "1987-07-05T05:45:00Z"
+    id = "this-is-id"
+    title = "recipe title"
+    description = "short description"
+    cooking_time = 100
+    portion = 1
+    create_time = "1987-07-05T05:45:00Z"
     video = "{video}"
 
 [video]
-	url = "http://url.com"
+    url = "http://url.com"
 ``` 
 
 
@@ -46,6 +46,6 @@ Example:
 
 ## TO-DO
 
-- [v] Support nested data structure
+- [x] Support nested data structure
 - [] Support dynamic object
 - [] Support JSON descriptor
