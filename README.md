@@ -10,6 +10,7 @@ TOML file.
     - string
     - int64
     - map[string]interface
+    - time
     - slice of type:
         - string
         - int
