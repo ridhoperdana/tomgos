@@ -55,6 +55,29 @@ There are 2 ways for including nested struct as field type
     [video]
         url = "http://url.com"
     ``` 
+   
+   Result:
+   ```go
+   package tomgos
+   
+   import (
+   	"time"
+   )
+   
+   type recipe struct {
+   	Description string    `json:"description"`
+   	CookingTime int64     `json:"cooking_time"`
+   	Portion     int64     `json:"portion"`
+   	CreateTime  time.Time `json:"create_time"`
+   	Video       video     `json:"video"`
+   	Id          string    `json:"id"`
+   	Title       string    `json:"title"`
+   }
+   
+   type video struct {
+   	Url string `json:"url"`
+   }
+   ```
 
 2. Write the children key toml inside the parent key.
     Example:
@@ -79,6 +102,34 @@ There are 2 ways for including nested struct as field type
     [thumbnail]
         url = "http://image.com"
     ``` 
+   
+    Result:
+    ```go
+    package tomgos
+    
+    import (
+    	"time"
+    )
+    
+    type recipe struct {
+    	Thumbnail   []thumbnail `json:"thumbnail"`
+    	Id          string      `json:"id"`
+    	Title       string      `json:"title"`
+    	Description string      `json:"description"`
+    	CookingTime int64       `json:"cooking_time"`
+    	Portion     int64       `json:"portion"`
+    	CreateTime  time.Time   `json:"create_time"`
+    	Video       video       `json:"video"`
+    }
+    
+    type video struct {
+    	Url string `json:"url"`
+    }
+    
+    type thumbnail struct {
+    	Url string `json:"url"`
+    }
+    ```
 
 
 ## How to Use
