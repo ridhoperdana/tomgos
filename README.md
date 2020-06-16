@@ -47,5 +47,5 @@ Example:
 ## TO-DO
 
 - [x] Support nested data structure
-- [ ] Support dynamic object
+- [x] Support dynamic object
 - [x] Support JSON descriptor

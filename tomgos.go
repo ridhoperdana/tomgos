@@ -93,8 +93,9 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 		var fields []StructFields
 		for rawKey, rawValue := range rawAsMap {
 			t := reflect.TypeOf(rawValue)
-			typeName := t.Name()
-			if typeName == "string" {
+			typeName := t.String()
+			switch typeName {
+			case "string":
 				fieldValueString := rawValue.(string)
 				_, err := time.Parse(time.RFC3339, fieldValueString)
 				if err == nil {
@@ -106,6 +107,8 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 				if len(valuesFromRegex) > 1 {
 					typeName = valuesFromRegex[1]
 				}
+			case "map[string]interface {}":
+				typeName = "map[string]interface{}"
 			}
 			f := StructFields{
 				Name:           snakeCaseToCamelCase(rawKey),
