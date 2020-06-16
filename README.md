@@ -27,6 +27,8 @@ Example working TOML:
     portion = 1
     create_time = "1987-07-05T05:45:00Z"
     metadata = {}
+    chef = ['ridho', 'budi']
+    category_ids = [1, 3, 4]
 ``` 
 
 ### Nested Struct
