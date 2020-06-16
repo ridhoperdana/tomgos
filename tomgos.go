@@ -104,6 +104,10 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 			typeName := t.String()
 			if structChecker[rawKey] {
 				typeName = rawKey
+				if t.String() == "[]map[string]interface {}" {
+					typeName = "[]" + rawKey
+				}
+
 			} else {
 				switch typeName {
 				case "string":
@@ -123,6 +127,10 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 				case "[]interface {}":
 					for _, value := range rawValue.([]interface{}) {
 						t := reflect.TypeOf(value)
+						if t.String() == "map[string]interface {}" {
+							typeName = "[]" + rawKey
+							break
+						}
 						typeName = "[]" + t.String()
 						break
 					}
@@ -132,7 +140,7 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 			f := StructFields{
 				Name:           snakeCaseToCamelCase(rawKey),
 				Type:           typeName,
-				JSONDescriptor: rawKey,
+				JSONDescriptor: strings.ToLower(rawKey),
 			}
 			fields = append(fields, f)
 		}

@@ -10,6 +10,10 @@ TOML file.
     - string
     - int64
     - map[string]interface
+    - slice of type:
+        - string
+        - int
+        - existing/inherited struct
 - Detect other struct (inherited struct) as field type 
 
 ## Supported TOML
@@ -62,10 +66,16 @@ There are 2 ways for including nested struct as field type
         create_time = "1987-07-05T05:45:00Z"
    
         [recipe.video]
-           url = "http://url.com" 
+           url = "http://url.com"
+        
+        [[recipe.thumbnail]]
+           url = "http://image.com" 
     
     [video]
         url = "http://url.com"
+    
+    [thumbnail]
+        url = "http://image.com"
     ``` 
 
 
@@ -80,5 +90,6 @@ There are 2 ways for including nested struct as field type
 - [x] Support dynamic object
 - [x] Support JSON descriptor
 - [x] Support slice string/int field type
-- [ ] Support slice nested struct field type
+- [x] Support slice nested struct field type
+- [ ] Support slice of dynamic object field type
 - [ ] Unit Test 
