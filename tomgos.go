@@ -40,27 +40,24 @@ type generator struct {
 }
 
 // thanks to https://www.socketloop.com/tutorials/golang-underscore-or-snake-case-to-camel-case-example
-func snakeCaseToCamelCase(inputUnderScoreStr string) (camelCase string) {
+// From https://github.com/toml-lang/toml#keys
+// Bare keys may only contain ASCII letters, ASCII digits, underscores, and dashes (A-Za-z0-9_-).
+func keyToCamelCase(input string) (camelCase string) {
 	isToUpper := false
+	camelCase = ""
 
-	for k, v := range inputUnderScoreStr {
-		if k == 0 {
-			camelCase = strings.ToUpper(string(inputUnderScoreStr[0]))
+	for k, v := range input {
+		// TODO: what if first char is a number
+		if v == '_' || v == '-' {
+			isToUpper = true
+		} else if k == 0 || isToUpper {
+			camelCase += strings.ToUpper(string(v))
+			isToUpper = false
 		} else {
-			if isToUpper {
-				camelCase += strings.ToUpper(string(v))
-				isToUpper = false
-			} else {
-				if v == '_' {
-					isToUpper = true
-				} else {
-					camelCase += string(v)
-				}
-			}
+			camelCase += strings.ToLower(string(v))
 		}
 	}
 	return
-
 }
 
 var re = regexp.MustCompile(`\{(.*?)\}`)
@@ -134,7 +131,7 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 			}
 
 			f := StructFields{
-				Name:           snakeCaseToCamelCase(rawKey),
+				Name:           keyToCamelCase(rawKey),
 				Type:           typeName,
 				JSONDescriptor: strings.ToLower(rawKey),
 			}
