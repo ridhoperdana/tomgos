@@ -77,4 +77,6 @@ There are 2 ways for including nested struct as field type
 - [x] Support nested data structure
 - [x] Support dynamic object
 - [x] Support JSON descriptor
-- [ ] Support array/slice field type
+- [x] Support slice string/int field type
+- [ ] Support slice nested struct field type
+- [ ] Unit Test 
