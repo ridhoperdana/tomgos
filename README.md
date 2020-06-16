@@ -3,6 +3,15 @@
 tomgos is a simple app to generate Golang struct based on
 TOML file.
 
+## Features
+
+- Detect field type based on value of the TOML
+- Detect multiple types of field
+    - string
+    - int64
+    - map[string]interface
+- Detect other struct (inherited struct) as field type 
+
 ## Supported TOML
 
 Just put a TOML file which represent your data. You can make/convert
@@ -17,27 +26,45 @@ Example working TOML:
     cooking_time = 100
     portion = 1
     create_time = "1987-07-05T05:45:00Z"
+    metadata = {}
 ``` 
 
 ### Nested Struct
-To include nested object in the struct just use `{$struct_name}` on the
-toml value.
+There are 2 ways for including nested struct as field type
 
-Example:
-```toml
-[recipe]
-    id = "this-is-id"
-    title = "recipe title"
-    description = "short description"
-    cooking_time = 100
-    portion = 1
-    create_time = "1987-07-05T05:45:00Z"
-    video = "{video}"
-    metadata = {}
+1. Using `{video}` bracket followed by struct's name inside of it.
+    Example:
+    ```toml
+    [recipe]
+        id = "this-is-id"
+        title = "recipe title"
+        description = "short description"
+        cooking_time = 100
+        portion = 1
+        create_time = "1987-07-05T05:45:00Z"
+        video = "{video}"
+    
+    [video]
+        url = "http://url.com"
+    ``` 
 
-[video]
-    url = "http://url.com"
-``` 
+2. Write the children key toml inside the parent key.
+    Example:
+    ```toml
+    [recipe]
+        id = "this-is-id"
+        title = "recipe title"
+        description = "short description"
+        cooking_time = 100
+        portion = 1
+        create_time = "1987-07-05T05:45:00Z"
+   
+        [recipe.video]
+           url = "http://url.com" 
+    
+    [video]
+        url = "http://url.com"
+    ``` 
 
 
 ## How to Use
@@ -50,3 +77,4 @@ Example:
 - [x] Support nested data structure
 - [x] Support dynamic object
 - [x] Support JSON descriptor
+- [ ] Support array/slice field type

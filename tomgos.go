@@ -81,35 +81,48 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 		PackageName: g.packageName,
 	}
 
+	structChecker := make(map[string]bool)
+
 	var structs []Struct
+	for key := range rawStruct {
+		structChecker[key] = true
+	}
+
 	for key, raw := range rawStruct {
-		structItem := Struct{
-			StructName: key,
-		}
 		rawAsMap, ok := raw.(map[string]interface{})
 		if !ok {
 			continue
 		}
+
+		structItem := Struct{
+			StructName: key,
+		}
+
 		var fields []StructFields
 		for rawKey, rawValue := range rawAsMap {
 			t := reflect.TypeOf(rawValue)
 			typeName := t.String()
-			switch typeName {
-			case "string":
-				fieldValueString := rawValue.(string)
-				_, err := time.Parse(time.RFC3339, fieldValueString)
-				if err == nil {
-					typeName = "time.Time"
-					generator.UsingTime = true
-				}
+			if structChecker[rawKey] {
+				typeName = rawKey
+			} else {
+				switch typeName {
+				case "string":
+					fieldValueString := rawValue.(string)
+					_, err := time.Parse(time.RFC3339, fieldValueString)
+					if err == nil {
+						typeName = "time.Time"
+						generator.UsingTime = true
+					}
 
-				valuesFromRegex := re.FindStringSubmatch(fieldValueString)
-				if len(valuesFromRegex) > 1 {
-					typeName = valuesFromRegex[1]
+					valuesFromRegex := re.FindStringSubmatch(fieldValueString)
+					if len(valuesFromRegex) > 1 {
+						typeName = valuesFromRegex[1]
+					}
+				case "map[string]interface {}":
+					typeName = "map[string]interface{}"
 				}
-			case "map[string]interface {}":
-				typeName = "map[string]interface{}"
 			}
+
 			f := StructFields{
 				Name:           snakeCaseToCamelCase(rawKey),
 				Type:           typeName,
