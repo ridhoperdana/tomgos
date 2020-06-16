@@ -127,10 +127,6 @@ func (g generator) Generate(tomlPathFile string) ([]byte, error) {
 				case "[]interface {}":
 					for _, value := range rawValue.([]interface{}) {
 						t := reflect.TypeOf(value)
-						if t.String() == "map[string]interface {}" {
-							typeName = "[]" + rawKey
-							break
-						}
 						typeName = "[]" + t.String()
 						break
 					}

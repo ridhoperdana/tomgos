@@ -14,6 +14,7 @@ TOML file.
         - string
         - int
         - existing/inherited struct
+        - map[string]interface
 - Detect other struct (inherited struct) as field type 
 
 ## Supported TOML
@@ -33,6 +34,7 @@ Example working TOML:
     metadata = {}
     chef = ['ridho', 'budi']
     category_ids = [1, 3, 4]
+    metas = [{}]
 ``` 
 
 ### Nested Struct
@@ -91,5 +93,5 @@ There are 2 ways for including nested struct as field type
 - [x] Support JSON descriptor
 - [x] Support slice string/int field type
 - [x] Support slice nested struct field type
-- [ ] Support slice of dynamic object field type
+- [x] Support slice of dynamic object field type
 - [ ] Unit Test 
