@@ -1,5 +1,6 @@
 vendor/
 .idea/
+coverage.out
 
 # default file
 file.toml
